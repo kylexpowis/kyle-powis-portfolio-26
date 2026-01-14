@@ -1,13 +1,76 @@
-body {
-  margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-    sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+html,
+body,
+#root {
+  height: 100%;
 }
 
-code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
-    monospace;
+/* Subtle animated blank-tile scanline + shimmer */
+.blank-tile {
+  position: relative;
+  overflow: hidden;
+}
+
+.blank-tile::before {
+  content: "";
+  position: absolute;
+  inset: -40%;
+  background: radial-gradient(
+    circle at 30% 30%,
+    rgba(255, 255, 255, 0.1),
+    transparent 55%
+  );
+  opacity: 0.35;
+  transform: translate3d(0, 0, 0);
+  animation: blankGlow 7s ease-in-out infinite;
+}
+
+.blank-tile::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(
+    120deg,
+    transparent 0%,
+    rgba(255, 255, 255, 0.08) 45%,
+    rgba(255, 255, 255, 0.12) 50%,
+    rgba(255, 255, 255, 0.08) 55%,
+    transparent 100%
+  );
+  transform: translateX(-120%);
+  opacity: 0.28;
+  animation: blankSweep 5.5s ease-in-out infinite;
+}
+
+@keyframes blankSweep {
+  0% {
+    transform: translateX(-120%);
+    opacity: 0;
+  }
+  20% {
+    opacity: 0.28;
+  }
+  55% {
+    transform: translateX(120%);
+    opacity: 0.24;
+  }
+  100% {
+    transform: translateX(120%);
+    opacity: 0;
+  }
+}
+
+@keyframes blankGlow {
+  0%,
+  100% {
+    transform: translate(-2%, -1%) scale(1);
+    opacity: 0.3;
+  }
+  50% {
+    transform: translate(2%, 1%) scale(1.05);
+    opacity: 0.42;
+  }
 }
