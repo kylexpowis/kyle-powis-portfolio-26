@@ -41,7 +41,7 @@ export default function PortfolioGrid() {
       {
         id: "resume",
         type: "panel",
-        label: "Full Resume",
+        label: "CV / Resume",
         span: "col-span-1 row-span-1",
       },
 
@@ -406,20 +406,143 @@ function TechPanel() {
 
 function ResumePanel() {
   return (
-    <div>
-      <Title>Resume/CV</Title>
+    <div className="max-w-3xl">
+      <Title>CV / Resume</Title>
       <Paragraph>
-        Drop a PDF into <span className="text-white">/public</span> and link it
-        here, or render a full resume section.
+        Full-stack developer with a front-end focus. Recently launched a
+        privacy-focused iOS VPN, delivering secure infrastructure, real-time
+        systems, and production payment flows. Skilled in modern JavaScript,
+        React, SwiftUI, TDD, CI/CD, and agile delivery.
       </Paragraph>
-      <a
-        href="/resume.pdf"
-        target="_blank"
-        rel="noreferrer"
-        className="inline-flex mt-6 rounded-full border border-white/15 px-5 py-2 text-white/90 hover:border-white/35 hover:text-white transition"
+
+      <SectionDivider />
+
+      <SectionTitle>Experience</SectionTitle>
+
+      <Role
+        title="PantherVPN"
+        subtitle="Sole Developer"
+        meta="August 2025 – Present · Live on the App Store · panthervpn.app"
       >
-        Open Resume PDF
-      </a>
+        Developed and deployed a privacy-focused iOS VPN using SwiftUI,
+        provisioning Linux-based VPS infrastructure across multiple regions and
+        implementing WireGuard-encrypted tunnels with public-key cryptography,
+        secure routing, and firewall hardening. Integrated Supabase
+        authentication, serverless access control, and secure payment flows via
+        StoreKit, Stripe, and BTCPay.
+      </Role>
+
+      <Role
+        title="Oakwood Furniture Outlet"
+        subtitle="Web Developer"
+        meta="February 2024 – Present"
+      >
+        Full Shopify build, SEO, Google Ads, and Facebook Ads.
+      </Role>
+
+      <Role
+        title="Kaizen Development"
+        subtitle="Founder & Developer"
+        meta="May 2024 – Present"
+      >
+        Launched a boutique web agency building responsive landing pages,
+        Shopify stores, and managing Google Ads campaigns. Delivered projects
+        for small businesses, yielding a 35% average increase in lead
+        conversion. Coordinated end-to-end project lifecycle including
+        requirements, UI/UX mockups, front-end development, and performance
+        optimisation.
+      </Role>
+
+      <Role
+        title="Pairsniper"
+        subtitle="Project Manager & Developer"
+        meta="Jan 2024 – April 2024"
+      >
+        Developed a cryptocurrency trading analytics platform automating data
+        aggregation from multiple market exchanges. Designed real-time
+        dashboards for live market data and architected a scalable backend with
+        robust error handling and relational database support.
+      </Role>
+
+      <Role
+        title="Northcoders Bootcamp"
+        subtitle="Full-Stack Developer"
+        meta="2023"
+      >
+        Completed an intensive 12-week bootcamp covering JavaScript, React,
+        Node.js, Express, PostgreSQL, and Agile methodologies. Built multiple
+        team and solo projects.
+      </Role>
+
+      <Role
+        title="Freelance Music Production & DJ"
+        subtitle="Self-Employed"
+        meta="2012 – Present"
+      >
+        Produced music for Artists, TV Shows & Brands, such as; Keeping Up With
+        the Kardashians, MTV’s The Real World, New Balance, Footasylum, and
+        other major brands.
+      </Role>
+
+      <SectionDivider />
+
+      <SectionTitle>Technical Skills</SectionTitle>
+
+      <SkillGroup
+        label="Languages & Frameworks"
+        text="JavaScript, React, React Native, Swift, Expo, Tailwind CSS, HTML5,
+        CSS3, Node.js, Python, Next.js, Vite"
+      />
+
+      <SkillGroup
+        label="Security"
+        text="WireGuard VPN architecture, encrypted tunnelling, Linux VPS
+        provisioning, network hardening, public-key cryptography, SSH-based
+        access control, Supabase authentication"
+      />
+
+      <SkillGroup
+        label="Back-End & Databases"
+        text="SQL / PostgreSQL, Supabase (Postgres, Auth, Realtime, Edge
+        Functions), Express.js, database seeding and migrations"
+      />
+
+      <SkillGroup
+        label="Testing & QA"
+        text="Jest, Supertest, React Testing Library, TDD workflows"
+      />
+
+      <SkillGroup
+        label="Hosting & Payments"
+        text="GitHub, Netlify, Vercel, Render, App Store Connect, Apple StoreKit
+        (IAP), Stripe, BTCPay"
+      />
+
+      <SkillGroup
+        label="Tools & Methodologies"
+        text="Git, VS Code, Figma, Agile / SCRUM, paired programming, technical
+        communication"
+      />
+
+      <SkillGroup
+        label="Soft Skills"
+        text="Adaptability, accountability, attention to detail, creative
+        problem-solving"
+      />
+
+      <SectionDivider />
+
+      {/* EDUCATION */}
+      <SectionTitle>Education</SectionTitle>
+
+      <Paragraph>
+        <strong>HND Media Production</strong> — University of Salford, UK
+        <br />
+        <strong>BTEC Level 3 National Diploma in Music Technology</strong> —
+        Bury College, UK
+        <br />
+        Nine GCSEs
+      </Paragraph>
     </div>
   );
 }
@@ -428,15 +551,10 @@ function ContactPanel() {
   return (
     <div>
       <Title>Contact</Title>
-      <Paragraph>
-        Minimal contact: email + socials. (You can add a form later.)
-      </Paragraph>
+      <Paragraph>Contact form will be added soon.</Paragraph>
       <div className="mt-6 space-y-2 text-white/85">
         <div>
-          Email: <span className="text-white">kyle@example.com</span>
-        </div>
-        <div>
-          Location: <span className="text-white">Manchester, UK</span>
+          Email: <span className="text-white">kyle@kaizendevelopment.uk</span>
         </div>
       </div>
     </div>
@@ -452,5 +570,37 @@ function IntroPanel() {
         grid-first UX.
       </Paragraph>
     </div>
+  );
+}
+
+function SectionTitle({ children }) {
+  return (
+    <h3 className="mt-12 mb-4 text-lg tracking-widest uppercase text-white/70">
+      {children}
+    </h3>
+  );
+}
+
+function SectionDivider() {
+  return <div className="my-10 h-px bg-white/10" />;
+}
+
+function Role({ title, subtitle, meta, children }) {
+  return (
+    <div className="mb-8">
+      <div className="text-white font-medium">
+        {title} <span className="text-white/60">| {subtitle}</span>
+      </div>
+      <div className="mt-1 text-sm text-white/55 italic">{meta}</div>
+      <p className="mt-3 text-white/85 leading-relaxed">{children}</p>
+    </div>
+  );
+}
+
+function SkillGroup({ label, text }) {
+  return (
+    <p className="mt-3 text-white/85 leading-relaxed">
+      <span className="text-white/60">{label}:</span> {text}
+    </p>
   );
 }
