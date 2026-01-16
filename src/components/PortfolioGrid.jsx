@@ -1,10 +1,29 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import GridTile from "./GridTile";
 
 export default function PortfolioGrid() {
   const [activeId, setActiveId] = useState(null);
+  const [isMobile, setIsMobile] = useState(() =>
+    typeof window !== "undefined"
+      ? window.matchMedia("(max-width: 639px)").matches
+      : false
+  );
 
+  useEffect(() => {
+    const mq = window.matchMedia("(max-width: 639px)");
+    const onChange = () => setIsMobile(mq.matches);
+    onChange();
+    mq.addEventListener?.("change", onChange);
+    return () => mq.removeEventListener?.("change", onChange);
+  }, []);
+
+  // close overlay when breakpoint flips
+  useEffect(() => {
+    setActiveId(null);
+  }, [isMobile]);
+
+  const layoutScope = isMobile ? "m" : "d";
   const tiles = useMemo(() => {
     const desktop = [
       // ROW 1
@@ -69,7 +88,7 @@ export default function PortfolioGrid() {
     ];
 
     const mobile = [
-      // TOP BLANKS (always first on mobile)
+      // TOP BLANKS
       { id: "blank", type: "blank", label: "", span: "col-span-1 row-span-1" },
       { id: "blank2", type: "blank", label: "", span: "col-span-1 row-span-1" },
 
@@ -154,6 +173,7 @@ export default function PortfolioGrid() {
             isActive={activeId === t.id}
             activeId={activeId}
             setActiveId={setActiveId}
+            layoutScope={layoutScope}
           />
         ))}
       </motion.div>
@@ -174,6 +194,7 @@ export default function PortfolioGrid() {
             isActive={activeId === t.id}
             activeId={activeId}
             setActiveId={setActiveId}
+            layoutScope={layoutScope}
           />
         ))}
       </motion.div>
@@ -192,7 +213,7 @@ export default function PortfolioGrid() {
               onClick={() => setActiveId(null)}
             />
             <motion.div
-              layoutId={`tile-${activeId}`}
+              layoutId={`tile-${layoutScope}-${activeId}`}
               className="relative mx-auto h-full max-w-5xl rounded-3xl border border-white/10 bg-[#07080a]/90 shadow-[0_0_80px_rgba(255,255,255,0.10)] overflow-hidden"
               initial={{ scale: 0.98, y: 10 }}
               animate={{ scale: 1, y: 0 }}
@@ -531,8 +552,6 @@ function ResumePanel() {
       />
 
       <SectionDivider />
-
-      {/* EDUCATION */}
       <SectionTitle>Education</SectionTitle>
 
       <Paragraph>

@@ -6,7 +6,12 @@ import ProjectLogoCycler from "./ProjectLogoCycler";
 import GlobeReachTile from "./GlobeReachTile";
 import MatrixHudTile from "./MatrixHudTile";
 
-export default function GridTile({ tile, activeId, setActiveId }) {
+export default function GridTile({
+  tile,
+  activeId,
+  setActiveId,
+  layoutScope = "d",
+}) {
   const [pulseKey, setPulseKey] = useState(0);
   const isSomeoneActive = !!activeId;
 
@@ -72,7 +77,7 @@ export default function GridTile({ tile, activeId, setActiveId }) {
   return (
     <motion.button
       layout
-      layoutId={`tile-${tile.id}`}
+      layoutId={`tile-${layoutScope}-${tile.id}`}
       className={[
         "relative w-full h-full rounded-3xl border border-white/10 bg-white/[0.03]",
         "overflow-hidden text-left p-4 sm:p-5",
@@ -118,7 +123,6 @@ export default function GridTile({ tile, activeId, setActiveId }) {
 
           {/* Right-side icon/logo area pinned nicely */}
           <div className="shrink-0 self-start sm:self-auto">
-            {/* Projects: normal */}
             {tile.type === "projects" && (
               <ProjectLogoCycler logos={projectLogos} />
             )}
