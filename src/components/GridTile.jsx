@@ -14,15 +14,17 @@ export default function GridTile({ tile, activeId, setActiveId }) {
     tile.type !== "blank" &&
     tile.type !== "role" &&
     tile.type !== "name" &&
-    tile.type !== "githubLink"; // github is link-only (no expand, need to do same for linkedin)
+    tile.type !== "githubLink" && // github is link-only
+    tile.type !== "link";
 
   const onHover = () => setPulseKey((k) => k + 1);
 
   const onClick = () => {
-    if (tile.type === "githubLink") {
+    if (tile.type === "githubLink" || tile.type === "link") {
       window.open(tile.href, "_blank", "noreferrer");
       return;
     }
+
     if (!clickable) return;
     setActiveId(tile.id);
   };
@@ -125,16 +127,19 @@ export default function GridTile({ tile, activeId, setActiveId }) {
             {tile.type === "tech" && <TechLogoCycler logos={techLogos} />}
 
             {tile.type === "githubLink" && <GitHubMark />}
+            {tile.type === "link" && tile.label === "LinkedIn" && (
+              <LinkedInLogo />
+            )}
           </div>
         </div>
 
-        {clickable && tile.type !== "githubLink" && (
+        {clickable && (
           <div className="text-xs tracking-widest uppercase text-white/45">
             Click to expand
           </div>
         )}
 
-        {tile.type === "githubLink" && (
+        {(tile.type === "githubLink" || tile.type === "link") && (
           <div className="text-xs tracking-widest uppercase text-white/45">
             Opens link
           </div>
@@ -182,6 +187,16 @@ function GitHubMark() {
     <div className="shrink-0 w-12 h-12 sm:w-14 sm:h-14 rounded-2xl border border-white/10 bg-white/[0.03] flex items-center justify-center">
       <svg viewBox="0 0 24 24" className="w-7 h-7 opacity-90 fill-white">
         <path d="M12 .5C5.73.5.75 5.6.75 12c0 5.12 3.16 9.45 7.55 10.98.55.1.75-.25.75-.56v-2.04c-3.07.69-3.72-1.52-3.72-1.52-.5-1.32-1.22-1.67-1.22-1.67-1-.71.08-.7.08-.7 1.1.08 1.68 1.15 1.68 1.15.98 1.72 2.58 1.22 3.21.93.1-.73.38-1.22.69-1.5-2.45-.29-5.02-1.26-5.02-5.6 0-1.24.43-2.25 1.14-3.05-.12-.29-.5-1.46.11-3.04 0 0 .93-.3 3.05 1.16.88-.25 1.83-.38 2.77-.38.94 0 1.89.13 2.77.38 2.12-1.46 3.05-1.16 3.05-1.16.61 1.58.23 2.75.11 3.04.71.8 1.14 1.81 1.14 3.05 0 4.35-2.58 5.31-5.04 5.59.39.35.74 1.05.74 2.12v3.14c0 .31.2.66.76.55 4.38-1.53 7.54-5.86 7.54-10.98C23.25 5.6 18.27.5 12 .5z" />
+      </svg>
+    </div>
+  );
+}
+
+function LinkedInLogo() {
+  return (
+    <div className="shrink-0 w-12 h-12 sm:w-14 sm:h-14 rounded-2xl border border-white/10 bg-white/[0.03] flex items-center justify-center">
+      <svg viewBox="0 0 24 24" className="w-7 h-7 opacity-90 fill-white">
+        <path d="M4.98 3.5C4.98 4.88 3.86 6 2.5 6S0 4.88 0 3.5 1.12 1 2.5 1 4.98 2.12 4.98 3.5zM.22 8h4.56v16H.22V8zM8.58 8h4.38v2.18h.06c.61-1.16 2.1-2.38 4.32-2.38 4.62 0 5.47 3.04 5.47 6.99V24h-4.56v-7.74c0-1.84-.03-4.21-2.56-4.21-2.56 0-2.95 2-2.95 4.08V24H8.58V8z" />
       </svg>
     </div>
   );
