@@ -340,32 +340,64 @@ function ProjectsPanel() {
 }
 
 function TechPanel() {
-  const tech = [
-    "JavaScript",
-    "React",
-    "Next.js",
-    "Node.js",
-    "SQL",
-    "Supabase",
-    "TailwindCSS",
-    "Swift",
-    "AWS",
+  const techItems = [
+    { name: "React", src: "/tech/react.svg" },
+    { name: "JavaScript", src: "/tech/javascript.svg" },
+    { name: "Supabase", src: "/tech/supabase.svg" },
+    { name: "WireGuard", src: "/tech/wireguard.svg" },
+    { name: "Kali Linux", src: "/tech/kalilinux.svg" },
+    { name: "SQL", src: "/tech/sql.svg" },
+    { name: "Node.js", src: "/tech/nodejs.svg" },
+    { name: "Swift", src: "/tech/swift.svg" },
+    { name: "Git", src: "/tech/git.svg" },
+    { name: "GitHub", src: "/tech/github.svg" },
+    { name: "Tailwind", src: "/tech/tailwindcss.svg" },
+    { name: "Python", src: "/tech/python.svg" },
+    { name: "Linux", src: "/tech/linux.svg" },
+    { name: "Xcode", src: "/tech/xcode.svg" },
   ];
+
   return (
     <div>
       <Title>Technologies</Title>
-      <Paragraph>
-        You can view my current tech stack below. <br /> However, I am eager to
-        learn more, and a fast learner. I
-      </Paragraph>
-      <div className="mt-6 flex flex-wrap gap-2">
-        {tech.map((t) => (
-          <span
-            key={t}
-            className="rounded-full border border-white/12 bg-white/[0.03] px-3 py-1 text-sm text-white/85"
+
+      <div className="mt-10 grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-x-6 gap-y-10">
+        {techItems.map((item) => (
+          <div
+            key={item.name}
+            className="group flex flex-col items-center justify-center"
           >
-            {t}
-          </span>
+            <div
+              className="
+          relative
+          w-16 h-16 sm:w-20 sm:h-20
+          flex items-center justify-center
+        "
+            >
+              <img
+                src={item.src}
+                alt={item.name}
+                draggable={false}
+                className="
+            w-10 h-10 sm:w-12 sm:h-12
+            object-contain
+            opacity-85
+            transition
+            group-hover:opacity-100
+            group-hover:scale-110
+            drop-shadow-[0_0_18px_rgba(120,255,180,0.12)]
+            group-hover:drop-shadow-[0_0_28px_rgba(120,255,180,0.22)]
+          "
+                style={{
+                  filter: "brightness(0) saturate(100%) invert(1)",
+                }}
+              />
+            </div>
+
+            <div className="mt-3 text-sm tracking-wide text-white/75 group-hover:text-white transition">
+              {item.name}
+            </div>
+          </div>
         ))}
       </div>
     </div>
