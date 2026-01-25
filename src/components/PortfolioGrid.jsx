@@ -4,26 +4,36 @@ import GridTile from "./GridTile";
 
 export default function PortfolioGrid() {
   const [activeId, setActiveId] = useState(null);
+
   const [isMobile, setIsMobile] = useState(() =>
     typeof window !== "undefined"
       ? window.matchMedia("(max-width: 639px)").matches
-      : false
+      : false,
   );
 
   useEffect(() => {
     const mq = window.matchMedia("(max-width: 639px)");
     const onChange = () => setIsMobile(mq.matches);
+
     onChange();
-    mq.addEventListener?.("change", onChange);
-    return () => mq.removeEventListener?.("change", onChange);
+
+    // Safari compatibility: older iOS uses addListener/removeListener
+    if (mq.addEventListener) {
+      mq.addEventListener("change", onChange);
+      return () => mq.removeEventListener("change", onChange);
+    } else {
+      mq.addListener(onChange);
+      return () => mq.removeListener(onChange);
+    }
   }, []);
 
-  // close overlay when breakpoint flips
+  // Close overlay when breakpoint flips (prevents layoutId mismatch)
   useEffect(() => {
     setActiveId(null);
   }, [isMobile]);
 
   const layoutScope = isMobile ? "m" : "d";
+
   const tiles = useMemo(() => {
     const desktop = [
       // ROW 1
@@ -152,28 +162,31 @@ export default function PortfolioGrid() {
     return { desktop, mobile };
   }, []);
 
-  // Desktop: true 3x3. Mobile: 2 columns (still keeps the vibe).
+  // iPhone Safari fix:
+  // Disable framer "layout" calculations on mobile grid containers.
+  const gridLayout = !isMobile;
+
   return (
     <div className="w-full max-w-5xl min-h-0 overflow-visible">
       {/* Mobile grid */}
       <motion.div
-        layout
+        layout={gridLayout}
         className="
-    grid gap-3
-    grid-cols-2
-    auto-rows-[120px]
-    sm:hidden
-     overflow-visible
-  "
+          grid gap-3
+          grid-cols-2
+          auto-rows-[120px]
+          sm:hidden
+          overflow-visible
+        "
       >
         {tiles.mobile.map((t) => (
           <GridTile
             key={`m-${t.id}`}
             tile={t}
-            isActive={activeId === t.id}
             activeId={activeId}
             setActiveId={setActiveId}
-            layoutScope={layoutScope}
+            layoutScope="m"
+            isMobile={true} // REQUIRED for GridTile to disable layoutId on mobile
           />
         ))}
       </motion.div>
@@ -182,19 +195,19 @@ export default function PortfolioGrid() {
       <motion.div
         layout
         className="
-    hidden sm:grid gap-3
-    sm:grid-cols-3
-    sm:auto-rows-[140px]
-  "
+          hidden sm:grid gap-3
+          sm:grid-cols-3
+          sm:auto-rows-[140px]
+        "
       >
         {tiles.desktop.map((t) => (
           <GridTile
             key={`d-${t.id}`}
             tile={t}
-            isActive={activeId === t.id}
             activeId={activeId}
             setActiveId={setActiveId}
-            layoutScope={layoutScope}
+            layoutScope="d"
+            isMobile={false}
           />
         ))}
       </motion.div>
@@ -207,11 +220,16 @@ export default function PortfolioGrid() {
             initial={{ opacity: 0 }}
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
+            style={{
+              WebkitTransform: "translateZ(0)",
+              transform: "translateZ(0)",
+            }}
           >
             <div
               className="absolute inset-0 bg-black/70 backdrop-blur-md"
               onClick={() => setActiveId(null)}
             />
+
             <motion.div
               layoutId={`tile-${layoutScope}-${activeId}`}
               className="relative mx-auto h-full max-w-5xl rounded-3xl border border-white/10 bg-[#07080a]/90 shadow-[0_0_80px_rgba(255,255,255,0.10)] overflow-hidden"
@@ -231,6 +249,8 @@ export default function PortfolioGrid() {
     </div>
   );
 }
+
+/* ---------------- Expanded panels ---------------- */
 
 function ExpandedContent({ id, onClose }) {
   return (
@@ -388,30 +408,22 @@ function TechPanel() {
             key={item.name}
             className="group flex flex-col items-center justify-center"
           >
-            <div
-              className="
-          relative
-          w-16 h-16 sm:w-20 sm:h-20
-          flex items-center justify-center
-        "
-            >
+            <div className="relative w-16 h-16 sm:w-20 sm:h-20 flex items-center justify-center">
               <img
                 src={item.src}
                 alt={item.name}
                 draggable={false}
                 className="
-            w-10 h-10 sm:w-12 sm:h-12
-            object-contain
-            opacity-85
-            transition
-            group-hover:opacity-100
-            group-hover:scale-110
-            drop-shadow-[0_0_18px_rgba(120,255,180,0.12)]
-            group-hover:drop-shadow-[0_0_28px_rgba(120,255,180,0.22)]
-          "
-                style={{
-                  filter: "brightness(0) saturate(100%) invert(1)",
-                }}
+                  w-10 h-10 sm:w-12 sm:h-12
+                  object-contain
+                  opacity-85
+                  transition
+                  group-hover:opacity-100
+                  group-hover:scale-110
+                  drop-shadow-[0_0_18px_rgba(120,255,180,0.12)]
+                  group-hover:drop-shadow-[0_0_28px_rgba(120,255,180,0.22)]
+                "
+                style={{ filter: "brightness(0) saturate(100%) invert(1)" }}
               />
             </div>
 
@@ -430,14 +442,13 @@ function ResumePanel() {
     <div className="max-w-3xl">
       <Title>CV / Resume</Title>
       <Paragraph>
-        Full-stack developer with a front-end focus. Recently launched a
-        privacy-focused iOS VPN, delivering secure infrastructure, real-time
-        systems, and production payment flows. Skilled in modern JavaScript,
-        React, SwiftUI, TDD, CI/CD, and agile delivery.
+        Full-stack developer with a front end focus. Recently launched a privacy
+        focused iOS VPN, delivering secure infrastructure, real time systems,
+        and production payment flows. Skilled in modern JavaScript, React,
+        SwiftUI, TDD, CI/CD, and agile delivery.
       </Paragraph>
 
       <SectionDivider />
-
       <SectionTitle>Experience</SectionTitle>
 
       <Role
@@ -445,9 +456,9 @@ function ResumePanel() {
         subtitle="Sole Developer"
         meta="August 2025 – Present · Live on the App Store · panthervpn.app"
       >
-        Developed and deployed a privacy-focused iOS VPN using SwiftUI,
-        provisioning Linux-based VPS infrastructure across multiple regions and
-        implementing WireGuard-encrypted tunnels with public-key cryptography,
+        Developed and deployed a privacy focused iOS VPN using SwiftUI,
+        provisioning Linux based VPS infrastructure across multiple regions and
+        implementing WireGuard encrypted tunnels with public key cryptography,
         secure routing, and firewall hardening. Integrated Supabase
         authentication, serverless access control, and secure payment flows via
         StoreKit, Stripe, and BTCPay.
@@ -469,8 +480,8 @@ function ResumePanel() {
         Launched a boutique web agency building responsive landing pages,
         Shopify stores, and managing Google Ads campaigns. Delivered projects
         for small businesses, yielding a 35% average increase in lead
-        conversion. Coordinated end-to-end project lifecycle including
-        requirements, UI/UX mockups, front-end development, and performance
+        conversion. Coordinated end to end project lifecycle including
+        requirements, UI/UX mockups, front end development, and performance
         optimisation.
       </Role>
 
@@ -480,7 +491,7 @@ function ResumePanel() {
         meta="Jan 2024 – April 2024"
       >
         Developed a cryptocurrency trading analytics platform automating data
-        aggregation from multiple market exchanges. Designed real-time
+        aggregation from multiple market exchanges. Designed real time
         dashboards for live market data and architected a scalable backend with
         robust error handling and relational database support.
       </Role>
@@ -490,14 +501,14 @@ function ResumePanel() {
         subtitle="Full-Stack Developer"
         meta="2023"
       >
-        Completed an intensive 12-week bootcamp covering JavaScript, React,
+        Completed an intensive 12 week bootcamp covering JavaScript, React,
         Node.js, Express, PostgreSQL, and Agile methodologies. Built multiple
         team and solo projects.
       </Role>
 
       <Role
         title="Freelance Music Production & DJ"
-        subtitle="Self-Employed"
+        subtitle="Self Employed"
         meta="2012 – Present"
       >
         Produced music for Artists, TV Shows & Brands, such as; Keeping Up With
@@ -506,58 +517,44 @@ function ResumePanel() {
       </Role>
 
       <SectionDivider />
-
       <SectionTitle>Technical Skills</SectionTitle>
 
       <SkillGroup
         label="Languages & Frameworks"
-        text="JavaScript, React, React Native, Swift, Expo, Tailwind CSS, HTML5,
-        CSS3, Node.js, Python, Next.js, Vite"
+        text="JavaScript, React, React Native, Swift, Expo, Tailwind CSS, HTML5, CSS3, Node.js, Python, Next.js, Vite"
       />
-
       <SkillGroup
         label="Security"
-        text="WireGuard VPN architecture, encrypted tunnelling, Linux VPS
-        provisioning, network hardening, public-key cryptography, SSH-based
-        access control, Supabase authentication"
+        text="WireGuard VPN architecture, encrypted tunnelling, Linux VPS provisioning, network hardening, public-key cryptography, SSH-based access control, Supabase authentication"
       />
-
       <SkillGroup
         label="Back-End & Databases"
-        text="SQL / PostgreSQL, Supabase (Postgres, Auth, Realtime, Edge
-        Functions), Express.js, database seeding and migrations"
+        text="SQL / PostgreSQL, Supabase (Postgres, Auth, Realtime, Edge Functions), Express.js, database seeding and migrations"
       />
-
       <SkillGroup
         label="Testing & QA"
         text="Jest, Supertest, React Testing Library, TDD workflows"
       />
-
       <SkillGroup
         label="Hosting & Payments"
-        text="GitHub, Netlify, Vercel, Render, App Store Connect, Apple StoreKit
-        (IAP), Stripe, BTCPay"
+        text="GitHub, Netlify, Vercel, Render, App Store Connect, Apple StoreKit (IAP), Stripe, BTCPay"
       />
-
       <SkillGroup
         label="Tools & Methodologies"
-        text="Git, VS Code, Figma, Agile / SCRUM, paired programming, technical
-        communication"
+        text="Git, VS Code, Figma, Agile / SCRUM, paired programming, technical communication"
       />
-
       <SkillGroup
         label="Soft Skills"
-        text="Adaptability, accountability, attention to detail, creative
-        problem-solving"
+        text="Adaptability, accountability, attention to detail, creative problem-solving"
       />
 
       <SectionDivider />
       <SectionTitle>Education</SectionTitle>
 
       <Paragraph>
-        <strong>HND Media Production</strong> — University of Salford, UK
+        <strong>HND Media Production</strong> - University of Salford, UK
         <br />
-        <strong>BTEC Level 3 National Diploma in Music Technology</strong> —
+        <strong>BTEC Level 3 National Diploma in Music Technology</strong> -
         Bury College, UK
         <br />
         Nine GCSEs
@@ -584,10 +581,7 @@ function IntroPanel() {
   return (
     <div>
       <Title>Kyle Powis</Title>
-      <Paragraph>
-        Full Stack Software Developer. Minimal, futuristic portfolio in a
-        grid-first UX.
-      </Paragraph>
+      <Paragraph>Full Stack Software Developer</Paragraph>
     </div>
   );
 }
