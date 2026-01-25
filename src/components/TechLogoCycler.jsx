@@ -39,7 +39,7 @@ export default function TechLogoCycler({ logos = [], interval = 2800 }) {
           alt=""
           draggable={false}
           className="relative z-10 w-8 h-8 sm:w-9 sm:h-9 object-contain opacity-90 drop-shadow-[0_0_10px_rgba(255,255,255,0.22)]"
-          // ✅ THIS is what makes tech logos white
+          // this makes tech logos white
           style={{ filter: "brightness(0) saturate(100%) invert(1)" }}
           initial={{ opacity: 0, y: 4, scale: 0.985 }}
           animate={{ opacity: 1, y: 0, scale: 1 }}

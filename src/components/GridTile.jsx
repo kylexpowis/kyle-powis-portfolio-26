@@ -11,25 +11,26 @@ export default function GridTile({
   activeId,
   setActiveId,
   layoutScope = "d",
+  isMobile = false, // passed from PortfolioGrid
 }) {
   const [pulseKey, setPulseKey] = useState(0);
   const isSomeoneActive = !!activeId;
+
+  const isLinkTile = tile.type === "githubLink" || tile.type === "link";
 
   const clickable =
     tile.type !== "blank" &&
     tile.type !== "role" &&
     tile.type !== "name" &&
-    tile.type !== "githubLink" && // github is link-only
-    tile.type !== "link";
+    !isLinkTile; // github/link are link-only (no expand)
 
   const onHover = () => setPulseKey((k) => k + 1);
 
   const onClick = () => {
-    if (tile.type === "githubLink" || tile.type === "link") {
+    if (isLinkTile) {
       window.open(tile.href, "_blank", "noreferrer");
       return;
     }
-
     if (!clickable) return;
     setActiveId(tile.id);
   };
@@ -52,7 +53,7 @@ export default function GridTile({
     "/tech/xcode.svg",
   ];
 
-  // (files in /public/projects/)
+  
   const projectLogos = ["/projects/panther.png"];
 
   // blank tiles
@@ -74,24 +75,33 @@ export default function GridTile({
     );
   }
 
+  // iPhone Safari fix:
+  // Disable layout + layoutId on mobile to stop disappearing/teleporting tiles.
+  const useLayout = !isMobile;
+
   return (
     <motion.button
-      layout
-      layoutId={`tile-${layoutScope}-${tile.id}`}
+      layout={useLayout}
+      layoutId={useLayout ? `tile-${layoutScope}-${tile.id}` : undefined}
       className={[
         "relative w-full h-full rounded-3xl border border-white/10 bg-white/[0.03]",
         "overflow-hidden text-left p-4 sm:p-5",
         "transition will-change-transform",
         "focus:outline-none",
-        clickable || tile.type === "githubLink"
-          ? "cursor-pointer"
-          : "cursor-default",
+        clickable || isLinkTile ? "cursor-pointer" : "cursor-default",
         tile.span || "",
       ].join(" ")}
       onMouseEnter={onHover}
       onFocus={onHover}
       onClick={onClick}
-      whileHover={!isSomeoneActive ? { scale: 1.01 } : {}}
+      whileHover={!isMobile && !isSomeoneActive ? { scale: 1.01 } : {}}
+      style={{
+        WebkitTapHighlightColor: "transparent",
+        WebkitTransform: "translateZ(0)",
+        transform: "translateZ(0)",
+        WebkitBackfaceVisibility: "hidden",
+        backfaceVisibility: "hidden",
+      }}
     >
       {/* glow */}
       <div className="absolute inset-0 opacity-0 hover:opacity-100 transition pointer-events-none">
@@ -100,7 +110,6 @@ export default function GridTile({
       </div>
 
       <div className="relative z-10 h-full flex flex-col justify-between">
-        {/* items-center keeps logo aligned on mobile */}
         <div className="flex items-center justify-between gap-3">
           <div className="min-w-0 max-w-[82%]">
             <AnimatedLockText
@@ -118,16 +127,15 @@ export default function GridTile({
             {tile.type === "tech" && (
               <div className="mt-2 text-sm text-white/65">Core Tech Stack</div>
             )}
+
             {tile.type === "githubLink" && <div className="mt-2 h-[1.25rem]" />}
           </div>
 
-          {/* Right-side icon/logo area pinned nicely */}
           <div className="shrink-0 self-start sm:self-auto">
             {tile.type === "projects" && (
               <ProjectLogoCycler logos={projectLogos} />
             )}
 
-            {/* inverted inside TechLogoCycler */}
             {tile.type === "tech" && <TechLogoCycler logos={techLogos} />}
 
             {tile.type === "githubLink" && <GitHubMark />}
@@ -143,7 +151,7 @@ export default function GridTile({
           </div>
         )}
 
-        {(tile.type === "githubLink" || tile.type === "link") && (
+        {isLinkTile && (
           <div className="text-xs tracking-widest uppercase text-white/45">
             Opens link
           </div>
