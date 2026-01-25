@@ -567,7 +567,7 @@ function ContactPanel() {
   return (
     <div>
       <Title>Contact</Title>
-      <Paragraph>Contact form will be added soon.</Paragraph>
+      <Paragraph>Drop me an email and ill get back to you asap.</Paragraph>
       <div className="mt-6 space-y-2 text-white/85">
         <div>
           Email: <span className="text-white">kyle@kaizendevelopment.uk</span>
