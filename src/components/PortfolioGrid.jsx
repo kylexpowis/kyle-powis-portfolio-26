@@ -42,7 +42,7 @@ export default function PortfolioGrid() {
       {
         id: "tech",
         type: "tech",
-        label: "Technologies",
+        label: "TechStack",
         span: "col-span-1 row-span-1",
       },
 
@@ -120,7 +120,7 @@ export default function PortfolioGrid() {
       {
         id: "tech",
         type: "tech",
-        label: "Technologies",
+        label: "TechStack",
         span: "col-span-1 row-span-1",
       },
       {
@@ -400,7 +400,7 @@ function TechPanel() {
 
   return (
     <div>
-      <Title>Technologies</Title>
+      <Title>TechStack</Title>
 
       <div className="mt-10 grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-x-6 gap-y-10">
         {techItems.map((item) => (
