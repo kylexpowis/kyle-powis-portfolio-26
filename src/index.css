@@ -3,9 +3,20 @@
 @tailwind utilities;
 
 html,
-body,
-#root {
+body {
   height: 100%;
+  background: #07080a; 
+}
+
+body {
+  margin: 0;
+  background: #07080a;
+  overscroll-behavior-y: none;
+}
+
+#root {
+  min-height: 100vh;
+  background: #07080a;
 }
 
 /* Subtle animated blank-tile scanline + shimmer */
