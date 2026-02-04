@@ -465,35 +465,17 @@ function ResumePanel() {
       </Role>
 
       <Role
-        title="Oakwood Furniture Outlet"
-        subtitle="Web Developer"
-        meta="February 2024 – Present"
-      >
-        Full Shopify build, SEO, Google Ads, and Facebook Ads.
-      </Role>
-
-      <Role
         title="Kaizen Development"
         subtitle="Founder & Developer"
         meta="May 2024 – Present"
       >
-        Launched a boutique web agency building responsive landing pages,
-        Shopify stores, and managing Google Ads campaigns. Delivered projects
-        for small businesses, yielding a 35% average increase in lead
+        Launched a boutique app & web agency building responsive landing pages,
+        Web Apps, Shopify stores, and managing Google Ads campaigns. Delivered
+        projects for small businesses, yielding a 35% average increase in lead
         conversion. Coordinated end to end project lifecycle including
         requirements, UI/UX mockups, front end development, and performance
-        optimisation.
-      </Role>
-
-      <Role
-        title="Pairsniper"
-        subtitle="Project Manager & Developer"
-        meta="Jan 2024 – April 2024"
-      >
-        Developed a cryptocurrency trading analytics platform automating data
-        aggregation from multiple market exchanges. Designed real time
-        dashboards for live market data and architected a scalable backend with
-        robust error handling and relational database support.
+        optimisation. My favourite build was "PairSniper", a cryptocurrency
+        scanner web app for a private client.
       </Role>
 
       <Role
