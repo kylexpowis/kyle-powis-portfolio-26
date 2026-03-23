@@ -323,9 +323,9 @@ function ProjectsPanel() {
       href: "https://panthervpn.app/",
     },
     {
-      name: "Puri Lips",
-      desc: "Shopify Build for a new Aesthetics product.",
-      href: "https://purilips.co.uk/",
+      name: "JW Cyclone Security",
+      desc: "Website for security and close protection agency.",
+      href: "https://www.jwcyclonesecurity.co.uk",
     },
     {
       name: "Oakwood Furniture Outlet",
